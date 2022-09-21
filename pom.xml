@@ -15,6 +15,7 @@
 	<description>Student and course management app using Spring Boot</description>
 	<properties>
 		<java.version>18</java.version>
+      
 	</properties>
 	<dependencies>
 		<dependency>
