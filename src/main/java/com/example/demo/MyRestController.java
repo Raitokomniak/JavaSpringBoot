@@ -4,6 +4,9 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+
 /*Pieni Spring Boot -sovellus, joka hyödyntää edellä toteutettua rakennetta. Tähän osioon kuuluu lähinnä RESTrajapinta, joka tarjoaa käyttäjälle HTTP:n kautta käyttöliittymätoiminnot, kuten kurssien hakemisen
 selaimeen ja uuden tiedon lisääminen. Tiedon lisäämisen voi toteuttaa toimimaan esim. Postmanilla JSONkutsuina tai tehdä jopa html-lomakkeilla kevyen käyttöliittymän (staattiset sivut Spring Bootissa). Ohjelmaa
 voi laajentaa halutessaan tukemaan myös monipuolisempia toimintoja kuten opiskelijan lisääminen tietylle
@@ -13,17 +16,26 @@ kuitenkin suurempi arvioinnissa. */
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 public class MyRestController {
+    /* 
+    @RequestMapping("/")
+    public void welcome(Model model) {
+        List<Student> students = Application.studentService.GetAllStudents();
+        model.addAttribute("students", students);
+    } 
+    */
 
     @GetMapping("/courses")
     public String Courses(){
         return "Hello courses";
     }
-
+    /*
     @GetMapping("/students")
     public List<String> Students(){
         List<String> nameList = new ArrayList<String>();
@@ -32,6 +44,14 @@ public class MyRestController {
         };
         return nameList;
     }
+   
+    @GetMapping("/students")
+    public String GetStudents(Model model){
+        List<Student> students = Application.studentService.GetAllStudents();
+        model.addAttribute("students", students);
+        return "students";
+    }
+     */
 
     @PostMapping("/createStudent")
     public String CreateStudent(String firstName, String lastName){
