@@ -33,6 +33,11 @@ public class ViewController {
         return "redirect:" + "/index.html";
     }
 
+    @RequestMapping("/createStudentForm")
+    public String CreateStudentForm(){
+        return "createstudentform";
+    }
+
     @RequestMapping("/students")
     public String ListStudents(){
         return "students";
