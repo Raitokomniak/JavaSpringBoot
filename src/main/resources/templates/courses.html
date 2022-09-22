@@ -12,9 +12,33 @@
 
         <div class="container">
             <h2>All courses</h2>
-            <table th:each="courses : ${courses}">
-                <tr th:text="${courses.GetName()}"></tr>
+            <table class="table" border="0" padding="2">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Teacher</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Additional information</th>
+                    </tr>
+                </thead>
+                <tr th:each="courses : ${courses}">
+                    <td th:text="${courses.GetID()}"></td>
+                    <td th:text="${courses.GetName()}"></td>
+                    <td th:text="${courses.GetTeacher()}"></td>
+                    <td th:text="${courses.GetStartDate()}"></td>
+                    <td th:text="${courses.GetEndDate()}"></td>
+                    <td th:text="${courses.GetCredit()}"></td>
+                    <td th:text="${courses.GetInfo()}"></td>
+                    <select th:each="students : ${courses.GetStudents()}"><option value="${students.GetID()}"></option></td></select>
+    
+                    <td><input type="button" value="Remove course"></td>
+                
+                </tr>
             </table>
+
         </div>
     </body>
 </html>
