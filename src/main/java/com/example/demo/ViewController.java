@@ -9,8 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ViewController {
     @RequestMapping("/")
-    public String index(){
+    public String index(Model model){
+        List<Student> students = Application.studentService.GetAllStudents();
+        model.addAttribute("students", students);
         return "index";
+    }
+
+    @RequestMapping("/createStudent")
+    public String CreateStudentRedirect(){
+        return "redirect:" + "/index.html";
     }
 
     @RequestMapping("/students")

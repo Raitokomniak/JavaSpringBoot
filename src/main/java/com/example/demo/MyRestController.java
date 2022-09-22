@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 
 @RestController
@@ -31,32 +32,18 @@ public class MyRestController {
     } 
     */
 
-    @GetMapping("/courses")
-    public String Courses(){
-        return "Hello courses";
-    }
-    /*
-    @GetMapping("/students")
-    public List<String> Students(){
-        List<String> nameList = new ArrayList<String>();
-        for(Student s : Application.studentService.GetAllStudents()){
-            nameList.add(s.firstName + " " + s.lastName);
-        };
-        return nameList;
-    }
-   
-    @GetMapping("/students")
-    public String GetStudents(Model model){
-        List<Student> students = Application.studentService.GetAllStudents();
-        model.addAttribute("students", students);
-        return "students";
-    }
-     */
-
     @PostMapping("/createStudent")
-    public String CreateStudent(String firstName, String lastName){
+    public RedirectView CreateStudent(String firstName, String lastName){
         Application.studentService.CreateStudent(firstName, lastName);
-        return "Created student " + firstName + " " + lastName;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setContextRelative(true);
+        redirectView.setUrl("/");
+        return redirectView;
+    }
+
+    @GetMapping("/createStudent")
+    public String returnToIndex(){
+        return "index";
     }
 
     /*
