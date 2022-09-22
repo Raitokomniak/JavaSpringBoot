@@ -6,8 +6,9 @@
 </head>
 <body>
 
-    <table th:each="students : ${students}">
-        <tr th:text="${students.GetFirstName()}"></tr>
+    <table th:each="courses : ${courses}">
+        <tr th:text="${courses.GetName()}"></tr>
     </table>
 
 </html>
+        

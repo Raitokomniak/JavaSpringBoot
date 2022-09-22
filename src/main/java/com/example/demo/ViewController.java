@@ -33,4 +33,15 @@ public class ViewController {
         return "redirect:" + "/index.html";
     }
 
+    @RequestMapping("/students")
+    public String ListStudents(){
+        return "students";
+    }
+
+    @RequestMapping("/courses")
+    public String ListCourses(){
+        return "courses";
+    }
+
+
 }
