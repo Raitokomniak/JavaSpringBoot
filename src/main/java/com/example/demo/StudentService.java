@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,8 +35,14 @@ class ServiceInstance implements StudentService {
 
     //Creates a new student with firstName and lastName
     public void CreateStudent(String firstName, String lastName){
-       students.add(new Student(firstName, lastName, CreateStudentID(firstName, lastName)));
-       System.out.println("Created student " + students.get(students.size() -1 ).GetFirstName() + " " + students.get(students.size() -1 ).GetLastName() + " with id " + students.get(students.size() -1 ).GetID());
+        students.add(new Student(firstName, lastName, CreateStudentID(firstName, lastName)));
+        System.out.println("Created student " + students.get(students.size() -1 ).GetFirstName() + " " + students.get(students.size() -1 ).GetLastName() + " with id " + students.get(students.size() -1 ).GetID());
+        
+        try {
+            Application.fileService.SaveStudentInfo(students);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Creates a unique student ID from first name, last name, the 
@@ -69,12 +76,22 @@ class ServiceInstance implements StudentService {
     public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info){
         courses.add(new OnlineCourse(id, name, teacher, startDate, endDate, credit, remoteLink, info));
         System.out.println("Created course " + courses.get(courses.size() - 1).GetID() + " " + courses.get(courses.size() - 1).GetName());
+        try {
+            Application.fileService.SaveCourseInfo(courses);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //Creates a new classroom course with a classroom number
     public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info){
         courses.add(new ClassRoomCourse(id, name, teacher, startDate, endDate, credit, classRoom, info));
         System.out.println("Created course " + courses.get(courses.size() - 1).GetID() + " " + courses.get(courses.size() - 1).GetName());
+        try {
+            Application.fileService.SaveCourseInfo(courses);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public void AddStudentToCourse(Student student, Course course){
@@ -97,10 +114,12 @@ class ServiceInstance implements StudentService {
     }
 
     public void SetLoadedCourses(List<Course> courses){
+        if(courses == null) return;
         this.courses = courses;
     }
 
     public void SetLoadedStudents(List<Student> students){
+        if(students == null) return;
         this.students = students;
     }
 }

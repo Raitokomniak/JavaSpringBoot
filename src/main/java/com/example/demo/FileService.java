@@ -1,6 +1,9 @@
 package com.example.demo;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class FileService implements Serializable {
     FileInfo courseData;
 
     public FileService(){
+        //Paths go to project root
         studentData = new FileInfo("StudentInfo.dat");
         courseData  = new FileInfo("CourseInfo.dat");
     }
@@ -51,6 +55,7 @@ public class FileService implements Serializable {
 
     //Loads student info from file
     public List<Student> LoadStudentInfo() throws IOException{
+        if(!new File(this.studentData.path).exists()) return null;
         ArrayList<Student> students = new ArrayList<Student>();
         Iterable<?> array = (Iterable<?>) ReadStream(this.studentData.path);
         for(Object o : array) students.add((Student)o);
@@ -59,6 +64,7 @@ public class FileService implements Serializable {
     
     //Loads course info from file
     public List<Course> LoadCourseInfo() throws IOException{
+        if(!new File(this.courseData.path).exists()) return null;
         ArrayList<Course> courses = new ArrayList<Course>();
         Iterable<?> array = (Iterable<?>) ReadStream(this.courseData.path);
         for(Object o : array) courses.add((Course)o);
