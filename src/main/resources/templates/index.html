@@ -2,14 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8"/>
-        <title>Baby's first spring boot</title></head>
-    <body><h1>Helou :)</h1>
+        <title>Student & Course management</title></head>
+    <body><h1>Student & Course management</h1>
     <p><a href ="createstudentform.html">Create student</a> </p>
-    <p><a href ="students">List of students:</a></p>
 
-    <tr th:each="students : ${students}">
-        <td><span th:text="${students.GetFirstName()}"></span></td>
-        </tr>
+    <p>
+        <form method="get" action="http://localhost:8080/courseRedirect">
+            <select name="courseType" aria-placeholder="Create Course">
+                <option value="" disabled selected>Course type</option>
+                <option value="onlinecourse">Online Course</option>
+                <option value="classroomcourse">Classroom Course</option>
+            </select>
+            <input type="submit" value="Create Course"/>
+        </form>
+        
+    </p>
+
+    <p><form method="post" action="http://localhost:8080/createStudent">
+        <input type="text" name="firstName" placeholder="First Name"/>
+        <input type="text" name="lastName" placeholder="Last Name"/>
+        <input type="submit" value="Create"/>
+    </form></p>
+
+    <p>List of students:</p>
+
+    <table th:each="students : ${students}">
+        <tr th:text="${students.GetFirstName()}"></tr>
+    </table>
+
+    <p>List of courses:</p>
+
+    <table th:each="courses : ${courses}">
+        <tr th:text="${courses.GetName()}"></tr>
+    </table>
 
     </body>
 </html>

@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +7,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ViewController {
     @RequestMapping("/")
-    public String index(Model model){
-        List<Student> students = Application.studentService.GetAllStudents();
-        model.addAttribute("students", students);
+    public String Index(Model model){
+        model.addAttribute("students", Application.studentService.GetAllStudents());
+        model.addAttribute("courses", Application.studentService.GetAllCourses());
         return "index";
+    }
+
+    @RequestMapping("/courseRedirect")
+    public String CourseRedirect(String courseType){
+        return "create" + courseType + "form";
+    }
+
+    @RequestMapping("/createonlinecourseform")
+    public String CreateOnlineCourseForm(){
+        return "createonlinecourseform";
+    }
+
+    @RequestMapping("/createclassroomcourseform")
+    public String CreateClassRoomCourseForm(){
+        return "createonlinecourseform";
     }
 
     @RequestMapping("/createStudent")
@@ -20,9 +33,4 @@ public class ViewController {
         return "redirect:" + "/index.html";
     }
 
-    @RequestMapping("/students")
-    public void welcome(Model model) {
-        List<Student> students = Application.studentService.GetAllStudents();
-        model.addAttribute("students", students);
-    } 
 }
