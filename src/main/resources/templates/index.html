@@ -1,40 +1,49 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <meta charset="UTF-8"/>
         <title>Student & Course management</title></head>
-    <body><h1>Student & Course management</h1>
-    <p><a href ="createstudentform.html">Create student</a> </p>
+    <body>
+    <div class="container">
+        <h1>Student & Course Management</h1>
+    </div>
 
-    <p>
-        <form method="get" action="http://localhost:8080/courseRedirect">
-            <select name="courseType" aria-placeholder="Create Course">
-                <option value="" disabled selected>Course type</option>
-                <option value="onlinecourse">Online Course</option>
-                <option value="classroomcourse">Classroom Course</option>
-            </select>
-            <input type="submit" value="Create Course"/>
-        </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <input type="button" onClick="location.href='createstudentform.html';" value="Create Student"></button>
+
+                <button>
+                    <form method="get" action="http://localhost:8080/courseRedirect">
+                        <select onchange="this.form.submit()" name="courseType">
+                            <option value="" disabled selected>Create Course</option>
+                            <option value="onlinecourse">Online Course</option>
+                            <option value="classroomcourse">Classroom Course</option>
+                        </select>
+
+                    </form>
+                </button>
+
+                <input type="button" method="get" action="students" value="Students"></button>
+                <input type="button" method="get" action="courses" value="Courses"></button>
+            </div>
+        </div>
+    </div>
         
-    </p>
+    <div class="container">
+        <p>List of students:</p>
 
-    <p><form method="post" action="http://localhost:8080/createStudent">
-        <input type="text" name="firstName" placeholder="First Name"/>
-        <input type="text" name="lastName" placeholder="Last Name"/>
-        <input type="submit" value="Create"/>
-    </form></p>
+        <table th:each="students : ${students}">
+            <tr th:text="${students.GetFirstName()}"></tr>
+        </table>
 
-    <p>List of students:</p>
+        <p>List of courses:</p>
 
-    <table th:each="students : ${students}">
-        <tr th:text="${students.GetFirstName()}"></tr>
-    </table>
-
-    <p>List of courses:</p>
-
-    <table th:each="courses : ${courses}">
-        <tr th:text="${courses.GetName()}"></tr>
-    </table>
+        <table th:each="courses : ${courses}">
+            <tr th:text="${courses.GetName()}"></tr>
+        </table>
+    </div>
 
     </body>
 </html>
