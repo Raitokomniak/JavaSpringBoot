@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ViewController {
     @RequestMapping("/")
     public String Index(Model model){
-        model.addAttribute("students", Application.studentService.GetAllStudents());
-        model.addAttribute("courses", Application.studentService.GetAllCourses());
         return "index";
     }
 
@@ -39,12 +37,14 @@ public class ViewController {
     }
 
     @RequestMapping("/students")
-    public String ListStudents(){
+    public String ListStudents(Model model){
+        model.addAttribute("students", Application.studentService.GetAllStudents());
         return "students";
     }
 
     @RequestMapping("/courses")
-    public String ListCourses(){
+    public String ListCourses(Model model){
+        model.addAttribute("courses", Application.studentService.GetAllCourses());
         return "courses";
     }
 
