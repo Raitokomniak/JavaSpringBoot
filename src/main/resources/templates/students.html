@@ -39,8 +39,20 @@
                        
                     </td>
                     <td>
-                        <form method="post" action="http://localhost:8080/deleteStudent">
-                            <input type="submit" name="studentID" th:id="${students.GetID()}">Delete student</input>
+                        <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteStudent">
+                            <input type="submit"></input>
+                            <input type="hidden" name="studentID" th:value="${students.GetID()}"/>
+                                <script>
+                                    function confirmation(form) {
+                                    let text = "Are you sure? This operation can't be undone.";
+                                    if(confirm(text)){
+                                        return true;
+                                    }
+                                    else return false;
+
+                                    document.getElementById("demo").innerHTML = text;
+                                    }
+                                </script>
                         </form>
                     </td>
 

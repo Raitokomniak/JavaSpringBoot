@@ -26,13 +26,26 @@ public class MyRestController {
 
     @PostMapping("/addStudentToCourse")
     public RedirectView AddStudentToCourse(String studentID, String courseID){
-        System.out.println(studentID + " " + courseID);
-        Application.studentService.AddStudentToCourse(studentID, courseID);
+
         
+        Application.studentService.AddStudentToCourse(studentID, courseID);
+
         return new RedirectView("/students");
     }
 
     
+    @PostMapping("/deleteStudent")
+    public RedirectView DeleteStudent(String studentID){
+        Application.studentService.DeleteStudent(studentID);
+        return new RedirectView("/students");
+    }
+
+    @PostMapping("/deleteCourse")
+    public RedirectView DeleteCourse(String courseID){
+        Application.studentService.DeleteCourse(courseID);
+        return new RedirectView("/courses");
+    }
+
 
 }
 

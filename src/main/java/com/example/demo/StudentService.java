@@ -17,13 +17,14 @@ public interface StudentService {
     public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info);
     public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info);
     public void AddStudentToCourse(String studentID, String courseID);
-    public void AddStudentToCourse(Student student, Course course);
     public void RemoveStudentFromCourse(Student student, Course course);
     public List<Student> GetAllStudents();
     public List<Course> GetAllCourses();
     public void SetLoadedCourses(List<Course> courses);
     public void SetLoadedStudents(List<Student> students);
     public Course FindCourseByID(String id);
+    public void DeleteStudent(String id);
+    public void DeleteCourse(String id);
 }
 
 class ServiceInstance implements StudentService {
@@ -95,21 +96,14 @@ class ServiceInstance implements StudentService {
             e.printStackTrace();
         }
     }
-    
-    
-    public void AddStudentToCourse(Student student, Course course){
-        course.AddStudentToCourse(student);
-        student.AddToCourse(course);
-        System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
-    }
-    
 
     public void AddStudentToCourse(String studentID, String courseID){
-        
-        System.out.println(studentID);
-        System.out.println(courseID);
         Course course = FindCourseByID(courseID);
         Student student = FindStudentByID(studentID);
+        if(course.students.contains(student)){
+            System.out.println("Student already on course");
+            return;
+        }
         course.AddStudentToCourse(student);
         student.AddToCourse(course);
         System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
@@ -150,5 +144,42 @@ class ServiceInstance implements StudentService {
     public void SetLoadedStudents(List<Student> students){
         if(students == null) return;
         this.students = students;
+    }
+
+    //Removes student from students list and from any courses where the student is enlisted
+    public void DeleteStudent(String id){
+        Student student = FindStudentByID(id);
+        if(students.contains(student)) {
+            students.remove(student);
+            for(Course c : courses){
+                if(c.students.contains(student)) c.students.remove(student);
+            }
+        }
+        else System.out.println("Student doesnt exist with this id");
+
+        try {
+            Application.fileService.SaveStudentInfo(students);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Deletes course from courses list and from any students who have course in their courselist
+    public void DeleteCourse(String id){
+        Course course = FindCourseByID(id);
+        if(courses.contains(course)) {
+            courses.remove(course);
+            for(Student s : students){
+                if(s.courses.contains(course)) s.courses.remove(course);
+            }
+        }
+        else System.out.println("Course doesnt exist with this id");
+
+        try {
+            Application.fileService.SaveCourseInfo(courses);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 }

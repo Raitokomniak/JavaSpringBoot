@@ -32,9 +32,25 @@
                     <td th:text="${courses.GetEndDate()}"></td>
                     <td th:text="${courses.GetCredit()}"></td>
                     <td th:text="${courses.GetInfo()}"></td>
-                    <select th:each="students : ${courses.GetStudents()}"><option value="${students.GetID()}"></option></td></select>
+                    <!--<select th:each="students : ${courses.GetStudents()}"><option value="${students.GetID()}"></option></select>-->
     
-                    <td><input type="button" value="Remove course"></td>
+                    <td>
+                        <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteCourse">
+                            <input type="submit"></input>
+                            <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
+                                <script>
+                                    function confirmation(form) {
+                                    let text = "Are you sure? This operation can't be undone.";
+                                    if(confirm(text)){
+                                        return true;
+                                    }
+                                    else return false;
+
+                                    document.getElementById("demo").innerHTML = text;
+                                    }
+                                </script>
+                        </form>
+                    </td>
                 
                 </tr>
             </table>
