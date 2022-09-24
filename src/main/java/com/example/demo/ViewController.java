@@ -39,12 +39,16 @@ public class ViewController {
     @RequestMapping("/students")
     public String ListStudents(Model model){
         model.addAttribute("students", Application.studentService.GetAllStudents());
+        //model.addAttribute("courses", Application.studentService.GetAllCourses());
+        //DEBUG
+        model.addAttribute("courses", Application.studentService.GetAllCourses().get(0));
         return "students";
     }
 
     @RequestMapping("/courses")
     public String ListCourses(Model model){
         model.addAttribute("courses", Application.studentService.GetAllCourses());
+        model.addAttribute("students", Application.studentService.GetAllStudents());
         return "courses";
     }
 

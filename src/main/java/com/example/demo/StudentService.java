@@ -16,12 +16,14 @@ public interface StudentService {
     String CreateStudentID(String firstName, String lastName);
     public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info);
     public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info);
+    public void AddStudentToCourse(String studentID, String courseID);
     public void AddStudentToCourse(Student student, Course course);
     public void RemoveStudentFromCourse(Student student, Course course);
     public List<Student> GetAllStudents();
     public List<Course> GetAllCourses();
     public void SetLoadedCourses(List<Course> courses);
     public void SetLoadedStudents(List<Student> students);
+    public Course FindCourseByID(String id);
 }
 
 class ServiceInstance implements StudentService {
@@ -94,7 +96,20 @@ class ServiceInstance implements StudentService {
         }
     }
     
+    
     public void AddStudentToCourse(Student student, Course course){
+        course.AddStudentToCourse(student);
+        student.AddToCourse(course);
+        System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
+    }
+    
+
+    public void AddStudentToCourse(String studentID, String courseID){
+        
+        System.out.println(studentID);
+        System.out.println(courseID);
+        Course course = FindCourseByID(courseID);
+        Student student = FindStudentByID(studentID);
         course.AddStudentToCourse(student);
         student.AddToCourse(course);
         System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
@@ -111,6 +126,20 @@ class ServiceInstance implements StudentService {
     }
     public List<Course> GetAllCourses(){
         return courses;
+    }
+
+    public Student FindStudentByID(String id){
+        for(Student s : students){
+            if(id.trim().equals(s.GetID())) return s;
+        }
+        return null;
+    }
+
+    public Course FindCourseByID(String id){
+        for(Course c : courses){
+            if(id.trim().equals(c.GetID())) return c;
+        }
+        return null;
     }
 
     public void SetLoadedCourses(List<Course> courses){

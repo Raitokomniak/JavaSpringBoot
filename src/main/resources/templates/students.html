@@ -25,7 +25,43 @@
                     <td th:text="${students.GetID()}"></td>
                     <td th:text="${students.GetFirstName()}"></td>
                     <td th:text="${students.GetLastName()}"></td>
-                    <td><input type="button" value="Add to a course"></td>
+                    <td>
+                        <form method="post" action="http://localhost:8080/addStudentToCourse">
+                        <select onchange="this.form.submit()">
+                           <!-- 
+                            <input type="hidden" name="studentID" th:id="${students.GetID()}"/>-->
+                            <option value="" disabled selected>Add to a course</option>
+                            <option th:each="courses : ${courses}" name="courseID" th:value="${courses.GetID()}" th:text="${courses.GetName()}"></option>
+                            <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
+                            <input type="hidden" name="studentID" th:value="${students.GetID()}"/>
+                        </select>
+                        </form>
+                       
+                    </td>
+                    <td>
+                        <form method="post" action="http://localhost:8080/deleteStudent">
+                            <input type="submit" name="studentID" th:id="${students.GetID()}">Delete student</input>
+                        </form>
+                    </td>
+
+                    
+                        
+                    <!--
+                    <form method="post" action="http://localhost:8080/addStudentToCourse">
+                        <select field="*{courses}" onchange="this.form.submit()" name="courseToAdd">
+                            <option value="" disabled selected>Add to a course</option>
+                            <option  th:each="courses : ${courses}" name="id" id="id" data-th-value="${courses.GetID()}" th:value="${courses.GetID()}" th:text="${courses.GetID() + courses.GetName()}"></option>
+                        </select>
+                    </form>
+                    -->
+
+
+
+
+                   
+
+
+                    
                 
                 </tr>
             </table>

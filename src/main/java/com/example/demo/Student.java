@@ -20,6 +20,7 @@ class Student implements Serializable {
     }
 
     public void AddToCourse(Course course){
+        if(this.courses == null) courses = new ArrayList<Course>();
         courses.add(course);
     }
 
