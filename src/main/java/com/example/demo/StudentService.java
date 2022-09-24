@@ -100,6 +100,12 @@ class ServiceInstance implements StudentService {
     public void AddStudentToCourse(String studentID, String courseID){
         Course course = FindCourseByID(courseID);
         Student student = FindStudentByID(studentID);
+
+        if(course == null || student == null) {
+            System.out.println(course + " is null or " + student + " is null");
+            return;
+        }
+
         if(course.students.contains(student)){
             System.out.println("Student already on course");
             return;

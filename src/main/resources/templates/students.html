@@ -19,29 +19,49 @@
                         <th scope="col">ID</th>
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
+                        <th scope="col">Add to a course</th>
+                        <th scope="col">Delete student</th>
                     </tr>
                 </thead>
-                <tr th:each="students : ${students}">
-                    <td th:text="${students.GetID()}"></td>
-                    <td th:text="${students.GetFirstName()}"></td>
-                    <td th:text="${students.GetLastName()}"></td>
+
+                <!-- List all students -->
+
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.GetID()}"></td>
+                    <td th:text="${student.GetFirstName()}"></td>
+                    <td th:text="${student.GetLastName()}"></td>
                     <td>
-                        <form method="post" action="http://localhost:8080/addStudentToCourse">
-                        <select onchange="this.form.submit()">
-                           <!-- 
-                            <input type="hidden" name="studentID" th:id="${students.GetID()}"/>-->
-                            <option value="" disabled selected>Add to a course</option>
-                            <option th:each="courses : ${courses}" name="courseID" th:value="${courses.GetID()}" th:text="${courses.GetName()}"></option>
-                            <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
-                            <input type="hidden" name="studentID" th:value="${students.GetID()}"/>
-                        </select>
-                        </form>
-                       
+                    <!-- Iterate over found courses -->
+
+                    <form id='addToCourseForm' method="post" action="http://localhost:8080/addStudentToCourse">
+                        <select id='courseselection' onchange="changeHiddenValue()">
+                            <option value="Add to course" selected disabled />
+                                    
+                            <th:block th:each="c : ${courses}">
+                                <option th:value="${c.GetID}" th:text="${cStat.index} + ${c.GetName()}"/>
+                            </th:block>
+                                    
+                            <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
+                            <input type="hidden" id='hiddenValue' name="courseID" th:value="${'NULL'}"/>
+                                    
+                         </select>
+                    </form>
                     </td>
+                    
+                    <!-- Workaround iteroidun select formin hiddenvalueiden muuttamiseen, meni muuten tosi kauan huHHUH-->
+                    <script type="text/javascript" th:inline="javascript">
+                        function changeHiddenValue(){
+                            document.getElementById('hiddenValue').value = document.getElementById('courseselection').value;
+                            document.getElementById('addToCourseForm').submit();
+                        }
+                    </script>
+
+
+                    <!-- Delete student with confirmation -->
                     <td>
                         <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteStudent">
-                            <input type="submit"></input>
-                            <input type="hidden" name="studentID" th:value="${students.GetID()}"/>
+                            <input type="submit" value="Delete Student"></input>
+                            <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
                                 <script>
                                     function confirmation(form) {
                                     let text = "Are you sure? This operation can't be undone.";
@@ -55,26 +75,6 @@
                                 </script>
                         </form>
                     </td>
-
-                    
-                        
-                    <!--
-                    <form method="post" action="http://localhost:8080/addStudentToCourse">
-                        <select field="*{courses}" onchange="this.form.submit()" name="courseToAdd">
-                            <option value="" disabled selected>Add to a course</option>
-                            <option  th:each="courses : ${courses}" name="id" id="id" data-th-value="${courses.GetID()}" th:value="${courses.GetID()}" th:text="${courses.GetID() + courses.GetName()}"></option>
-                        </select>
-                    </form>
-                    -->
-
-
-
-
-                   
-
-
-                    
-                
                 </tr>
             </table>
         </div>

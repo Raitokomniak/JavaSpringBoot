@@ -26,14 +26,18 @@ public class MyRestController {
 
     @PostMapping("/addStudentToCourse")
     public RedirectView AddStudentToCourse(String studentID, String courseID){
+        System.out.println("student " + studentID + " course " + courseID);
 
+        if(studentID != null && courseID != null)
+            Application.studentService.AddStudentToCourse(studentID, courseID);
+        else {
+            System.out.println(studentID + " " + courseID);
+            System.out.println("one is null");
+        }
         
-        Application.studentService.AddStudentToCourse(studentID, courseID);
-
         return new RedirectView("/students");
     }
 
-    
     @PostMapping("/deleteStudent")
     public RedirectView DeleteStudent(String studentID){
         Application.studentService.DeleteStudent(studentID);

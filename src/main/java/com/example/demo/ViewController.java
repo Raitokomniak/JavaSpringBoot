@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.Arrays;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +41,11 @@ public class ViewController {
     @RequestMapping("/students")
     public String ListStudents(Model model){
         model.addAttribute("students", Application.studentService.GetAllStudents());
-        //model.addAttribute("courses", Application.studentService.GetAllCourses());
-        //DEBUG
-        model.addAttribute("courses", Application.studentService.GetAllCourses().get(0));
+        model.addAttribute("courses", Application.studentService.GetAllCourses());
+        int index = 0;
+        for(Course c : Application.studentService.GetAllCourses()){
+            model.addAttribute(String.valueOf(index++), c.GetID());
+        }
         return "students";
     }
 
