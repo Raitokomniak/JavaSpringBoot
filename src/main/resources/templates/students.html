@@ -3,7 +3,6 @@
     <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <meta charset="UTF-8"/>
-        <title>Student & Course management</title>
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
         <script> $(function(){ $("#header").load("header.html");  }); </script> 
     </head>
@@ -11,7 +10,14 @@
         <div id="header"></div>
 
         <div class="container">
-            <h2>All students</h2>
+            <table>
+                <td class="col-md-6">
+                    <h2 scope="col">All students</h2>
+                </td>
+                <td>
+                    <input type="button" onClick="location.href='createStudentForm';" value="Create Student"></button>
+                </td>
+            </table>
 
             <table class="table" border="0" padding="2">
                 <thead>

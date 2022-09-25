@@ -95,6 +95,8 @@ public class FileService implements Serializable {
 
         Application.studentService.SetLoadedCourses(courses);
         Application.studentService.SetLoadedStudents(students);
+        SaveCourseInfo(courses);
+        SaveStudentInfo(students);
     }
 
     public void FlushAllContent(){
