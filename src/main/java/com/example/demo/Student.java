@@ -1,14 +1,12 @@
 package com.example.demo;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
+//Student implements Serializable so that it can be saved as an object
 class Student implements Serializable {
     String firstName;
     String lastName;
     String id;
-    List<Course> courses;
+    //List<Course> courses; // students could theoratically track courses but for this exercise unnecessary
 
     public Student(){}
     
@@ -16,21 +14,10 @@ class Student implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
-        courses = new ArrayList<Course>();
-    }
-
-    public void AddToCourse(Course course){
-        if(this.courses == null) courses = new ArrayList<Course>();
-        courses.add(course);
-    }
-
-    public void RemoveFromCourse(Course course){
-        courses.remove(course);
     }
 
     //Getters
     public String GetFirstName(){ return firstName; }
     public String GetLastName(){ return lastName; }
     public String GetID(){   return id;}
-    public List<Course> GetCourses(){ return courses; }
 }

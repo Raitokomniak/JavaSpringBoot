@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import java.util.Arrays;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ViewController {
     @RequestMapping("/")
-    public String Index(Model model){
+    public String Index(){
+        return "index";
+    }
+
+    @RequestMapping("/index.html")
+    public String StaticIndex(){
         return "index";
     }
 
@@ -55,17 +58,7 @@ public class ViewController {
 
     @RequestMapping("/course")
     public String CourseInfo(@RequestParam String courseID, Model model){
-        Course course = Application.studentService.FindCourseByID(courseID);
-        model.addAttribute("course", course);
-
-        if(course instanceof OnlineCourse){
-            OnlineCourse oc = (OnlineCourse) course;
-            model.addAttribute("location", oc.GetLink());
-        }
-        if(course instanceof ClassRoomCourse){
-            ClassRoomCourse cc = (ClassRoomCourse) course;
-            model.addAttribute("location", cc.GetClassRoom());
-        }
+        model = Application.studentService.GetCourseInfo(courseID, model);
         
         return "course";
     }

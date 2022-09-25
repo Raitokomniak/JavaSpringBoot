@@ -4,20 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//A class to track the info and execute some functions of a file
+//A small class to track the info and execute some functions of a file
 class FileInfo {
     File file;
     String path;
 
     FileInfo(String path){
         this.path = path;
-    }
-
-    public void NewFile() throws IOException{
-        file = new File(path);
-        file.createNewFile();
-        file.canRead();
-        file.canWrite();
     }
 }
 
@@ -31,7 +24,6 @@ public class FileService implements Serializable {
         courseData  = new FileInfo("CourseInfo.dat");
     }
 
-    
     // Saves the Student list as an object to the path designated in the studentData FileInfo
     public void SaveStudentInfo(List<Student> students) throws IOException{
         FileOutputStream stream = new FileOutputStream(studentData.path);
@@ -82,6 +74,7 @@ public class FileService implements Serializable {
         return object;
     }
 
+    //Loads some premade content made for this demo
     public void LoadPremadeContent() throws IOException{
         if(!new File("CourseInfo_demo.dat").exists()) return; 
         ArrayList<Course> courses = new ArrayList<Course>();
@@ -99,6 +92,7 @@ public class FileService implements Serializable {
         SaveStudentInfo(students);
     }
 
+    //Deletes all data
     public void FlushAllContent(){
         new File(this.courseData.path).delete();
         new File(this.studentData.path).delete();

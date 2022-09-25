@@ -9,9 +9,7 @@
     
     <body>
         <div id="header"></div>
-
         <div class="container">
-            
             <table class="table" border="0">
                 <thead>
                     <tr>
@@ -27,12 +25,12 @@
                     </tr>
                 </thead>
                 <tr>
-                <form method="post" action="http://localhost:8080/saveEditedCourse">
+                <form method="post" action="/saveEditedCourse">
                     <td><input type="hidden" name="courseID" th:value="${course.GetID()}"/> <input name="id" th:value="${course.GetID()}"/></td>
                     <td><input name="name" th:value="${course.GetName()}"/></td>
                     <td><input name="teacher" th:value="${course.GetTeacher()}"/></td>
-                    <td><input name="startDate" th:value="${course.GetStartDate()}"/></td>
-                    <td><input name="endDate" th:value="${course.GetEndDate()}"/></td>
+                    <td><input type="date" name="startDate" th:value="${course.GetStartDate()}"/></td>
+                    <td><input type="date" name="endDate" th:value="${course.GetEndDate()}"/></td>
                     <td><input name="credit" th:value="${course.GetCredit()}"/></td>
                     <td><input name="location" th:value="${location}"/></td>
                     <td><input name="info" th:value="${course.GetInfo()}"/></td>

@@ -13,7 +13,6 @@ public abstract class Course implements Serializable{
     String endDate;
     int credit;
     String info;
-    String courseType;
     List<Student> students;
 
     public Course(){}
@@ -29,9 +28,7 @@ public abstract class Course implements Serializable{
         students = new ArrayList<Student>();
     }
 
-    public void AddStudentToCourse(Student student){
-        students.add(student);
-    }
+    public void AddStudentToCourse(Student student){ students.add(student); }
 
     public void RemoveStudentFromCourse(Student student){
         for(Student s : students){
@@ -42,7 +39,6 @@ public abstract class Course implements Serializable{
         }
     }
 
-    //Getters
     public String GetID(){return id;}
     public String GetName(){return name;}
     public String GetTeacher(){return teacher;}
@@ -50,6 +46,5 @@ public abstract class Course implements Serializable{
     public String GetEndDate(){return endDate;}
     public int GetCredit(){return credit;}
     public String GetInfo(){return info;}
-    public String GetType(){return courseType;}
     public List<Student> GetStudents(){return students;}
 }

@@ -6,10 +6,8 @@
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
         <script> $(function(){ $("#header").load("header.html");  }); </script> 
     </head>
-    
     <body>
         <div id="header"></div>
-
         <div class="container">
             
             <table class="table" border="0">
@@ -36,13 +34,9 @@
                     <td th:text="${course.GetCredit()}"></td>
                     <td th:text="${location}"></td>
                     <td th:text="${course.GetInfo()}"></td>
-                    <td th:text="${location}">
-                    <td><a th:href="'http://localhost:8080/editcourse?courseID=' + ${course.GetID()}">Edit</a></td>
-
-
-                    
+                    <td><a th:href="'/editcourse?courseID=' + ${course.GetID()}">Edit</a></td>
                     <td>
-                        <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteCourse">
+                        <form method="post" onsubmit="return confirmation(this)" action="/deleteCourse">
                             <input type="submit" value="Delete course"/>
                             <input type="hidden" name="courseID" th:value="${course.GetID()}"/>
                                 <script>
@@ -58,9 +52,7 @@
                                 </script>
                         </form>
                     </td>
-                
                 </tr>
-               
             </table>
             <h3>Students on course</h3>
             <table class="table" width="100%">
@@ -69,7 +61,7 @@
                     <th th:text="${student.GetID()}"></th>
                     <th th:text="${student.GetFirstName()}"></th>
                     <th th:text="${student.GetLastName()}"></th>
-                    <th><form method="post" action="http://localhost:8080/removeStudentFromCourse"><input type="submit" value="Remove from course"/>
+                    <th><form method="post" action="/removeStudentFromCourse"><input type="submit" value="Remove from course"/>
                     <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
                     <input type="hidden" name="courseID" th:value="${course.GetID()}"/>
                 </form>

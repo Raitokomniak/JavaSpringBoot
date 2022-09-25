@@ -13,7 +13,7 @@ public class Application {
     public static StudentService studentService;
     public static FileService fileService;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Run spring app
 		SpringApplication.run(Application.class, args);
 
@@ -34,15 +34,7 @@ public class Application {
         fileService = new FileService();
 
         //Auto-load StudentInfo.dat and CourseInfo.dat
-        try {
-            studentService.SetLoadedCourses(fileService.LoadCourseInfo());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            studentService.SetLoadedStudents(fileService.LoadStudentInfo());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        studentService.SetLoadedCourses(fileService.LoadCourseInfo());
+        studentService.SetLoadedStudents(fileService.LoadStudentInfo());
 	}
 }

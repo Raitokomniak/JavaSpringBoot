@@ -1,5 +1,4 @@
 package com.example.demo;
-
 import java.io.IOException;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,27 +28,14 @@ public class MyRestController {
     }
 
     @PostMapping("/addStudentToCourse")
-    public RedirectView AddStudentToCourse(@RequestParam String studentID, @RequestParam String courseID) throws IOException{
-        System.out.println("student " + studentID);
-        
-        if(studentID != null && courseID != null)
-            Application.studentService.AddStudentToCourse(studentID, courseID);
-        else {
-            System.out.println(studentID + " " + courseID);
-            System.out.println("one is null");
-        }
-        
+    public RedirectView AddStudentToCourse(@RequestParam String studentID, @RequestParam String courseID) throws IOException{ 
+        Application.studentService.AddStudentToCourse(studentID, courseID);
         return new RedirectView("/students");
     }
 
     @PostMapping("/removeStudentFromCourse")
     public RedirectView RemoveStudentToCourse(String studentID, String courseID) throws IOException{
-        if(studentID != null && courseID != null)
-            Application.studentService.RemoveStudentFromCourse(studentID, courseID);
-        else {
-            System.out.println(studentID + " " + courseID);
-            System.out.println("one is null");
-        }
+        Application.studentService.RemoveStudentFromCourse(studentID, courseID);
         return new RedirectView("/course?courseID=" + courseID);
     }
 
@@ -67,21 +53,11 @@ public class MyRestController {
 
     @PostMapping("/saveEditedCourse")
     public RedirectView EditCourse(String courseID, String id, String name, String teacher, String startDate, String endDate, int credit, String location, String info) throws IOException{
-        Course c = Application.studentService.FindCourseByID(courseID);
-
-        if(c instanceof OnlineCourse){
-            OnlineCourse oc = (OnlineCourse) c;
-            oc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
-        }
-        else if(c instanceof ClassRoomCourse) {
-            ClassRoomCourse cc = (ClassRoomCourse) c;
-            cc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
-        }
-       
+        Application.studentService.EditCourse(courseID, id, name, teacher, startDate, endDate, credit, location, info);
         return new RedirectView("/course?courseID=" + courseID);
     }
 
-    @PostMapping("/editCourse")
+    @GetMapping("/editCourse")
     public RedirectView EditCourse(@RequestParam String courseID) throws IOException{
         return new RedirectView("/course?courseID=" + courseID);
     }

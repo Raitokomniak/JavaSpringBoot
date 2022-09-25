@@ -4,13 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import org.springframework.ui.Model;
 
-/*Service (business logic)
-Tee palveluluokka, joka tarjoaa metodit tiedon hallintaan. Käytännössä tämä luokka sisältää esim. toiminnot,
-joilla opiskelijat lisätään kurssille, lisätään uusia opiskelijoita tai haetaan tietoja jne. Tyypillisesti kontrolleri
-sisältää esim. koosteita, joissa datamallit ovat. Lisähaaste: Tee kontrollerista ensin interface, joka määrittelee
-tarvittavat toiminnot ja toteuta sitten kyseinen rajapinta.
-REST-rajapinta tulee käyttämään tätä luokkaa tiedon hakuun jne. */
 public interface StudentService {
     public void CreateStudent(String firstName, String lastName)  throws IOException;
     String CreateStudentID(String firstName, String lastName);
@@ -23,14 +18,16 @@ public interface StudentService {
     public void SetLoadedCourses(List<Course> courses);
     public void SetLoadedStudents(List<Student> students);
     public Course FindCourseByID(String id);
+    public void EditCourse(String courseID, String id, String name, String teacher, String startDate, String endDate, int credit, String location, String info);
     public void DeleteStudent(String id) throws IOException;
     public void DeleteCourse(String id) throws IOException;
+    public Model GetCourseInfo(String courseID, Model model);
 }
 
 class ServiceInstance implements StudentService {
     List<Student> students;
     List<Course> courses;
-
+    
     public ServiceInstance(){
         students = new ArrayList<Student>();
         courses = new ArrayList<Course>();
@@ -42,10 +39,8 @@ class ServiceInstance implements StudentService {
         System.out.println("Created student " + students.get(students.size() -1 ).GetFirstName() + " " + students.get(students.size() -1 ).GetLastName() + " with id " + students.get(students.size() -1 ).GetID());
         Application.fileService.SaveStudentInfo(students);
     }
-
-    // Creates a unique student ID from first name, last name, the 
-    // last two digits of the current year and checks for duplicates to
-    // create a unique key
+    
+    // Creates a unique student ID from first name, last name, the last two digits of the current year and checks for duplicates to create a unique key
     public String CreateStudentID(String firstName, String lastName){
         String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
         char[] id = new char[8];
@@ -84,6 +79,7 @@ class ServiceInstance implements StudentService {
         Application.fileService.SaveCourseInfo(courses);
     }
 
+    //If student found and course found, add student to course
     public void AddStudentToCourse(String studentID, String courseID)  throws IOException{
         System.out.println("AddStudentToCourse() " + studentID + " " + courseID);
         Course course = FindCourseByID(courseID);
@@ -94,48 +90,34 @@ class ServiceInstance implements StudentService {
             return;
         }
 
-        if(course.students.contains(student) || student.courses.contains((course))){
-            System.out.println("Student already on course");
-            return;
+        for(Student s : course.students){
+            if(s.GetID().equals(studentID)){
+                System.out.println("Student already on course");
+                return;
+            }
         }
+
         course.AddStudentToCourse(student);
-        student.AddToCourse(course);
         System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
         Application.fileService.SaveCourseInfo(courses);
         Application.fileService.SaveStudentInfo(students);
     }
 
+    //If student found on course, remove student from course
     public void RemoveStudentFromCourse(String studentID, String courseID) throws IOException{
         Course course = FindCourseByID(courseID);
         Student student = FindStudentByID(studentID);
+        if(course == null || student == null) {
+            System.out.println(course + " is null or " + student + " is null");
+            return;
+        }
         course.RemoveStudentFromCourse(student);
-        student.RemoveFromCourse(course);
         System.out.println("Removed student " + student.GetFirstName() + " " + student.GetLastName() + " from course " + course.GetID() + " " + course.GetName());
         Application.fileService.SaveCourseInfo(courses);
         Application.fileService.SaveStudentInfo(students);
     }
 
-    public List<Student> GetAllStudents(){ return students;}
-    public List<Course> GetAllCourses(){ return courses; }
-
-    public Student FindStudentByID(String id){
-        for(Student s : students){ if(id.trim().equals(s.GetID())) return s; }
-        return null;
-    }
-
-    public Course FindCourseByID(String id){
-        for(Course c : courses){ if(id.trim().equals(c.GetID())) return c; }
-        return null;
-    }
-
-    public void SetLoadedCourses(List<Course> courses){
-        if(courses != null)  this.courses = courses;
-    }
-
-    public void SetLoadedStudents(List<Student> students){
-        if(students != null) this.students = students;
-    }
-
+    
     //Removes student from students list and from any courses where the student is enlisted
     public void DeleteStudent(String id) throws IOException{
         Student student = FindStudentByID(id);
@@ -151,14 +133,67 @@ class ServiceInstance implements StudentService {
     
     }
 
-    //Deletes course from courses list and from any students who have course in their courselist
+    //Removes course from courses list
     public void DeleteCourse(String id) throws IOException{
         Course course = FindCourseByID(id);
-        if(courses.contains(course)) {
-            courses.remove(course);
-            for(Student s : students) if(s.courses.contains(course)) s.courses.remove(course);
-        }
+        if(courses.contains(course)) courses.remove(course);
         else System.out.println("Course doesnt exist with this id");
         Application.fileService.SaveCourseInfo(courses);
     }
+
+
+    //Edit course after checking for subclass
+    public void EditCourse(String courseID, String id, String name, String teacher, String startDate, String endDate, int credit, String location, String info){
+        Course c = Application.studentService.FindCourseByID(courseID);
+        
+        if(c instanceof OnlineCourse){
+            OnlineCourse oc = (OnlineCourse) c;
+            oc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
+        }
+        else if(c instanceof ClassRoomCourse) {
+            ClassRoomCourse cc = (ClassRoomCourse) c;
+            cc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
+        }
+    }
+
+    //Get course info after checking subclass
+    public Model GetCourseInfo(String courseID, Model model){
+        Course course = Application.studentService.FindCourseByID(courseID);
+        model.addAttribute("course", course);
+
+        if(course instanceof OnlineCourse){
+            OnlineCourse oc = (OnlineCourse) course;
+            model.addAttribute("location", oc.GetLink());
+        }
+        if(course instanceof ClassRoomCourse){
+            ClassRoomCourse cc = (ClassRoomCourse) course;
+            model.addAttribute("location", cc.GetClassRoom());
+        }
+        return model;
+    }
+
+    //Get all students and courses
+    public List<Student> GetAllStudents(){ return students;}
+    public List<Course> GetAllCourses(){ return courses; }
+
+    //Find by id
+    public Course FindCourseByID(String id){
+        for(Course c : courses){ if(id.trim().equals(c.GetID())) return c; }
+        return null;
+    }
+
+    public Student FindStudentByID(String id){
+        for(Student s : students){ if(id.trim().equals(s.GetID())) return s; }
+        return null;
+    }
+
+    //Set lists loaded via fileservice
+    public void SetLoadedCourses(List<Course> courses){
+        if(courses != null)  this.courses = courses;
+    }
+
+    public void SetLoadedStudents(List<Student> students){
+        if(students != null) this.students = students;
+    }
+
 }

@@ -16,7 +16,7 @@
                 </td>
                 <td>
                     <button>
-                        <form method="get" action="http://localhost:8080/courseRedirect">
+                        <form method="get" action="/courseRedirect">
                             <select onchange="this.form.submit()" name="courseType">
                                 <option value="" disabled selected>Create Course</option>
                                 <option value="onlinecourse">Online Course</option>
@@ -27,7 +27,7 @@
                 </td>
             </table>
             
-
+            <p>Click on Course Name for more info</p>
 
             <table class="table" border="0" padding="2">
                 <thead>
@@ -36,51 +36,19 @@
                         <th scope="col">Course Name</th>
                         <th scope="col">Credit</th>
                         <th scope="col">Additional information</th>
-                        <th scope="col">Remove student from course</th>
                         <th scope="col">Delete course</th>
                     </tr>
                 </thead>
                 <tr th:each="courses : ${courses}">
                     <td th:text="${courses.GetID()}"></td>
-                    <td><a th:href="'http://localhost:8080/getCourse?courseID=' + ${courses.GetID()}" th:text="${courses.GetName()}"></td>
+                    <td><a th:href="'/getCourse?courseID=' + ${courses.GetID()}" th:text="${courses.GetName()}"></td>
 
                     <td th:text="${courses.GetCredit()}"></td>
                     <td th:text="${courses.GetInfo()}"></td>
-
-                    <td>
-                            <!-- Iterate over found students -->
-        
-                            <form id='removeFromCourseForm' method="post" action="http://localhost:8080/removeStudentFromCourse">
-                                <select id='studentselection' onchange="changeHiddenValue()">
-                                    <option value="Remove from course" selected disabled />
-                                            
-                                    <th:block th:each="s : ${courses.GetStudents()}">
-                                        <option th:value="${s.GetID}" th:text="${s.GetFirstName()} + ' ' + ${s.GetLastName()}"/>
-                                    </th:block>
-                                            
-                                    <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
-                                    <input type="hidden" id='hiddenValue' name="studentID" th:value="${'NULL'}"/>
-                                            
-                                 </select>
-                            </form>
-                            </td>
-                            
-                            <!-- Change the hidden value based to the selection-->
-                            <script type="text/javascript" th:inline="javascript">
-                                function changeHiddenValue(){
-                                    document.getElementById('hiddenValue').value = document.getElementById('studentselection').value;
-                                    let text = "Are you sure?";
-                                    if(confirm(text)){
-                                        document.getElementById('removeFromCourseForm').submit();
-                                    }
-                                    else return;
-                                }
-                            </script>
-                    </td>
     
                     <td>
-                        <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteCourse">
-                            <input type="submit"></input>
+                        <form method="post" onsubmit="return confirmation(this)" action="/deleteCourse">
+                            <input type="submit" value="Delete"></input>
                             <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
                                 <script>
                                     function confirmation(form) {
