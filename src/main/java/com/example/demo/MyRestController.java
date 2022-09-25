@@ -1,20 +1,82 @@
 package com.example.demo;
+import java.io.IOException;
 
-/*Pieni Spring Boot -sovellus, joka hyödyntää edellä toteutettua rakennetta. Tähän osioon kuuluu lähinnä RESTrajapinta, joka tarjoaa käyttäjälle HTTP:n kautta käyttöliittymätoiminnot, kuten kurssien hakemisen
-selaimeen ja uuden tiedon lisääminen. Tiedon lisäämisen voi toteuttaa toimimaan esim. Postmanilla JSONkutsuina tai tehdä jopa html-lomakkeilla kevyen käyttöliittymän (staattiset sivut Spring Bootissa). Ohjelmaa
-voi laajentaa halutessaan tukemaan myös monipuolisempia toimintoja kuten opiskelijan lisääminen tietylle
-kurssille jne.
-Jos REST ei ole hallussa, voi pienen käyttöliittymän tehdä myös konsolisovelluksena. REST-rajapinnan arvo on
-kuitenkin suurempi arvioinnissa. */
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
+@RestController
 public class MyRestController {
+    @PostMapping("/createStudent")
+    public RedirectView CreateStudent(String firstName, String lastName) throws IOException{
+        Application.studentService.CreateStudent(firstName, lastName);
+        return new RedirectView("/students");
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(StudentService.class, args);
-	}
+    @PostMapping("/createOnlineCourse")
+    public RedirectView CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info) throws IOException{
+        Application.studentService.CreateOnlineCourse(id, name, teacher, startDate, endDate, credit, remoteLink, info);
+        return new RedirectView("/courses");
+    }
 
+    @PostMapping("/createClassRoomCourse")
+    public RedirectView CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info) throws IOException{
+        Application.studentService.CreateClassRoomCourse(id, name, teacher, startDate, endDate, credit, classRoom, info);
+        return new RedirectView("/courses");
+    }
+
+    @PostMapping("/addStudentToCourse")
+    public RedirectView AddStudentToCourse(@RequestParam String studentID, @RequestParam String courseID) throws IOException{ 
+        Application.studentService.AddStudentToCourse(studentID, courseID);
+        return new RedirectView("/students");
+    }
+
+    @PostMapping("/removeStudentFromCourse")
+    public RedirectView RemoveStudentToCourse(String studentID, String courseID) throws IOException{
+        Application.studentService.RemoveStudentFromCourse(studentID, courseID);
+        return new RedirectView("/course?courseID=" + courseID);
+    }
+
+    @PostMapping("/deleteStudent")
+    public RedirectView DeleteStudent(String studentID) throws IOException{
+        Application.studentService.DeleteStudent(studentID);
+        return new RedirectView("/students");
+    }
+
+    @PostMapping("/deleteCourse")
+    public RedirectView DeleteCourse(String courseID) throws IOException{
+        Application.studentService.DeleteCourse(courseID);
+        return new RedirectView("/courses");
+    }
+
+    @PostMapping("/saveEditedCourse")
+    public RedirectView EditCourse(String courseID, String id, String name, String teacher, String startDate, String endDate, int credit, String location, String info) throws IOException{
+        Application.studentService.EditCourse(courseID, id, name, teacher, startDate, endDate, credit, location, info);
+        return new RedirectView("/course?courseID=" + courseID);
+    }
+
+    @GetMapping("/editCourse")
+    public RedirectView EditCourse(@RequestParam String courseID) throws IOException{
+        return new RedirectView("/course?courseID=" + courseID);
+    }
+
+    @GetMapping("/loadPremadeContent")
+    public RedirectView LoadPremadeContent() throws IOException{
+        Application.fileService.LoadPremadeContent();
+        return new RedirectView("/");
+    }
+
+    @GetMapping("/flushAllContent")
+    public RedirectView FlushAllContent(){
+        Application.fileService.FlushAllContent();
+        return new RedirectView("/");
+    }
+
+    @GetMapping("/getCourse")
+    public RedirectView GetCourse(@RequestParam String courseID){
+        return new RedirectView("/course?courseID=" + courseID);
+    }
 }
+

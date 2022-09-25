@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <meta charset="UTF-8"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
+        <script> $(function(){ $("#header").load("header.html");  }); </script> 
+    </head>
+    <body>
+        <div id="header"></div>
+        <div class="container">
+            
+            <table class="table" border="0">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Teacher</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Additional information</th>
+                        <th scope="col">Edit course</th>
+                        <th scope="col">Delete course</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td th:text="${course.GetID()}"></td>
+                    <td th:text="${course.GetName()}"></td>
+                    <td th:text="${course.GetTeacher()}"></td>
+                    <td th:text="${course.GetStartDate()}"></td>
+                    <td th:text="${course.GetEndDate()}"></td>
+                    <td th:text="${course.GetCredit()}"></td>
+                    <td th:text="${location}"></td>
+                    <td th:text="${course.GetInfo()}"></td>
+                    <td><a th:href="'/editcourse?courseID=' + ${course.GetID()}">Edit</a></td>
+                    <td>
+                        <form method="post" onsubmit="return confirmation(this)" action="/deleteCourse">
+                            <input type="submit" value="Delete course"/>
+                            <input type="hidden" name="courseID" th:value="${course.GetID()}"/>
+                                <script>
+                                    function confirmation(form) {
+                                    let text = "Are you sure? This operation can't be undone.";
+                                    if(confirm(text)){
+                                        return true;
+                                    }
+                                    else return false;
+
+                                    document.getElementById("demo").innerHTML = text;
+                                    }
+                                </script>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <h3>Students on course</h3>
+            <table class="table" width="100%">
+                <thead class="thead-light">
+                <tr th:each="student : ${course.GetStudents()}">
+                    <th th:text="${student.GetID()}"></th>
+                    <th th:text="${student.GetFirstName()}"></th>
+                    <th th:text="${student.GetLastName()}"></th>
+                    <th><form method="post" action="/removeStudentFromCourse"><input type="submit" value="Remove from course"/>
+                    <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
+                    <input type="hidden" name="courseID" th:value="${course.GetID()}"/>
+                </form>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </body>
+</html>

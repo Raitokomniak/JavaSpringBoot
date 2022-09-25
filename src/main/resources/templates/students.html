@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+ <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <meta charset="UTF-8"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
+        <script> $(function(){ $("#header").load("header.html");  }); </script> 
+    </head>
+    <body>
+        <div id="header"></div>
+
+        <div class="container">
+            <table>
+                <td class="col-md-6">
+                    <h2 scope="col">All students</h2>
+                </td>
+                <td>
+                    <input type="button" onClick="location.href='createStudentForm';" value="Create Student"></button>
+                </td>
+            </table>
+
+            <table class="table" border="0" padding="2">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Add to a course</th>
+                        <th scope="col">Delete student</th>
+                    </tr>
+                </thead>
+
+                <!-- List all students -->
+
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.GetID()}"></td>
+                    <td th:text="${student.GetFirstName()}"></td>
+                    <td th:text="${student.GetLastName()}"></td>
+                    <td>
+                        
+                        <!-- Iterate over found courses -->
+                        <form id='addToCourseForm' method="post">
+                            <select th:element-id="${student.GetID()}" th:id="${student.GetID()} + 'courseselection'" th:onchange="changeHiddenValue(this.getAttribute('element-id'))">
+                                <option value="Add to course" selected disabled />
+                                <th:block th:each="c : ${courses}">
+                                    <option th:value="${c.GetID}" th:text="${c.GetName()}"/>
+                                </th:block>
+                            </select>
+                        </form>
+                        </td>
+                        
+                        <!-- Change the form action based on the selected course of the student elementid -->
+                        <script type="text/javascript" th:inline="javascript">
+                            function changeHiddenValue(elementid){
+                                console.log(document.getElementById(elementid + 'courseselection').value);
+                                var courseID = document.getElementById(elementid + 'courseselection').value;
+                                document.getElementById('addToCourseForm').action = "/addStudentToCourse?studentID=" + elementid + "&courseID=" + courseID;
+                                document.getElementById('addToCourseForm').submit();
+                            }
+                        </script>
+
+                    <!-- Delete student with confirmation -->
+                    <td>
+                        <form method="post" onsubmit="return confirmation(this)" action="/deleteStudent">
+                            <input type="submit" value="Delete"></input>
+                            <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
+                                <script>
+                                    function confirmation(form) {
+                                    let text = "Are you sure? This operation can't be undone.";
+                                    if(confirm(text)){
+                                        return true;
+                                    }
+                                    else return false;
+                                    }
+                                </script>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+
+</html>
