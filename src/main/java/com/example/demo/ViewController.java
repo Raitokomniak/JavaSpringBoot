@@ -70,5 +70,22 @@ public class ViewController {
         return "course";
     }
 
+    @RequestMapping("/editcourse")
+    public String EditCourseInfo(@RequestParam String courseID, Model model){
+        Course course = Application.studentService.FindCourseByID(courseID);
+        model.addAttribute("course", course);
+
+        if(course instanceof OnlineCourse){
+            OnlineCourse oc = (OnlineCourse) course;
+            model.addAttribute("location", oc.GetLink());
+        }
+        if(course instanceof ClassRoomCourse){
+            ClassRoomCourse cc = (ClassRoomCourse) course;
+            model.addAttribute("location", cc.GetClassRoom());
+        }
+        
+        return "editcourse";
+    }
+
 
 }

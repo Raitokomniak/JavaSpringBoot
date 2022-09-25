@@ -65,6 +65,27 @@ public class MyRestController {
         return new RedirectView("/courses");
     }
 
+    @PostMapping("/saveEditedCourse")
+    public RedirectView EditCourse(String courseID, String id, String name, String teacher, String startDate, String endDate, int credit, String location, String info) throws IOException{
+        Course c = Application.studentService.FindCourseByID(courseID);
+
+        if(c instanceof OnlineCourse){
+            OnlineCourse oc = (OnlineCourse) c;
+            oc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
+        }
+        else if(c instanceof ClassRoomCourse) {
+            ClassRoomCourse cc = (ClassRoomCourse) c;
+            cc.EditCourse(id, name, teacher, startDate, endDate, credit, location, info);
+        }
+       
+        return new RedirectView("/course?courseID=" + courseID);
+    }
+
+    @PostMapping("/editCourse")
+    public RedirectView EditCourse(@RequestParam String courseID) throws IOException{
+        return new RedirectView("/course?courseID=" + courseID);
+    }
+
     @GetMapping("/loadPremadeContent")
     public RedirectView LoadPremadeContent() throws IOException{
         Application.fileService.LoadPremadeContent();

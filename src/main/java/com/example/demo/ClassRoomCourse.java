@@ -11,5 +11,16 @@ public class ClassRoomCourse extends Course {
         courseType = "classroom";
     }
 
+    public void EditCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info){
+        this.id = id;
+        this.name = name;
+        this.teacher = teacher;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.credit = credit;
+        this.classRoom = classRoom;
+        this.info = info;
+    }
+
     public String GetClassRoom(){return classRoom;}
 }

@@ -23,6 +23,7 @@
                         <th scope="col">Credit</th>
                         <th scope="col">Location</th>
                         <th scope="col">Additional information</th>
+                        <th scope="col">Edit course</th>
                         <th scope="col">Delete course</th>
                     </tr>
                 </thead>
@@ -35,6 +36,9 @@
                     <td th:text="${course.GetCredit()}"></td>
                     <td th:text="${location}"></td>
                     <td th:text="${course.GetInfo()}"></td>
+                    <td th:text="${location}">
+                    <td><a th:href="'http://localhost:8080/editcourse?courseID=' + ${course.GetID()}">Edit</a></td>
+
 
                     
                     <td>
