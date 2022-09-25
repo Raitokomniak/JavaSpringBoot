@@ -42,10 +42,6 @@ public class ViewController {
     public String ListStudents(Model model){
         model.addAttribute("students", Application.studentService.GetAllStudents());
         model.addAttribute("courses", Application.studentService.GetAllCourses());
-        int index = 0;
-        for(Course c : Application.studentService.GetAllCourses()){
-            model.addAttribute(String.valueOf(index++), c.GetID());
-        }
         return "students";
     }
 

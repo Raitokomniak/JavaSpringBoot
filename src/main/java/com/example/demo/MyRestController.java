@@ -1,5 +1,9 @@
 package com.example.demo;
 
+import java.io.IOException;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -26,8 +30,6 @@ public class MyRestController {
 
     @PostMapping("/addStudentToCourse")
     public RedirectView AddStudentToCourse(String studentID, String courseID){
-        System.out.println("student " + studentID + " course " + courseID);
-
         if(studentID != null && courseID != null)
             Application.studentService.AddStudentToCourse(studentID, courseID);
         else {
@@ -36,6 +38,18 @@ public class MyRestController {
         }
         
         return new RedirectView("/students");
+    }
+
+    @PostMapping("/removeStudentFromCourse")
+    public RedirectView RemoveStudentToCourse(String studentID, String courseID){
+        if(studentID != null && courseID != null)
+            Application.studentService.RemoveStudentFromCourse(studentID, courseID);
+        else {
+            System.out.println(studentID + " " + courseID);
+            System.out.println("one is null");
+        }
+        
+        return new RedirectView("/courses");
     }
 
     @PostMapping("/deleteStudent")
@@ -48,6 +62,23 @@ public class MyRestController {
     public RedirectView DeleteCourse(String courseID){
         Application.studentService.DeleteCourse(courseID);
         return new RedirectView("/courses");
+    }
+
+    
+    @GetMapping("/loadPremadeContent")
+    public RedirectView LoadPremadeContent(){
+        try {
+            Application.fileService.LoadPremadeContent();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new RedirectView("/");
+    }
+
+    @GetMapping("/flushAllContent")
+    public RedirectView FlushAllContent(Model model){
+        Application.fileService.FlushAllContent();
+        return new RedirectView("/");
     }
 
 

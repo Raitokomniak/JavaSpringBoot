@@ -22,6 +22,8 @@
                         <th scope="col">End Date</th>
                         <th scope="col">Credit</th>
                         <th scope="col">Additional information</th>
+                        <th scope="col">Remove student from course</th>
+                        <th scope="col">Delete course</th>
                     </tr>
                 </thead>
                 <tr th:each="courses : ${courses}">
@@ -32,7 +34,37 @@
                     <td th:text="${courses.GetEndDate()}"></td>
                     <td th:text="${courses.GetCredit()}"></td>
                     <td th:text="${courses.GetInfo()}"></td>
-                    <!--<select th:each="students : ${courses.GetStudents()}"><option value="${students.GetID()}"></option></select>-->
+
+                    <td>
+                            <!-- Iterate over found students -->
+        
+                            <form id='removeFromCourseForm' method="post" action="http://localhost:8080/removeStudentFromCourse">
+                                <select id='studentselection' onchange="changeHiddenValue()">
+                                    <option value="Remove from course" selected disabled />
+                                            
+                                    <th:block th:each="s : ${courses.GetStudents()}">
+                                        <option th:value="${s.GetID}" th:text="${s.GetFirstName()} + ' ' + ${s.GetLastName()}"/>
+                                    </th:block>
+                                            
+                                    <input type="hidden" name="courseID" th:value="${courses.GetID()}"/>
+                                    <input type="hidden" id='hiddenValue' name="studentID" th:value="${'NULL'}"/>
+                                            
+                                 </select>
+                            </form>
+                            </td>
+                            
+                            <!-- Change the hidden value based to the selection-->
+                            <script type="text/javascript" th:inline="javascript">
+                                function changeHiddenValue(){
+                                    document.getElementById('hiddenValue').value = document.getElementById('studentselection').value;
+                                    let text = "Are you sure?";
+                                    if(confirm(text)){
+                                        document.getElementById('removeFromCourseForm').submit();
+                                    }
+                                    else return;
+                                }
+                            </script>
+                    </td>
     
                     <td>
                         <form method="post" onsubmit="return confirmation(this)" action="http://localhost:8080/deleteCourse">

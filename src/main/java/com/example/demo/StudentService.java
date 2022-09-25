@@ -17,7 +17,7 @@ public interface StudentService {
     public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info);
     public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info);
     public void AddStudentToCourse(String studentID, String courseID);
-    public void RemoveStudentFromCourse(Student student, Course course);
+    public void RemoveStudentFromCourse(String studentID, String courseID);
     public List<Student> GetAllStudents();
     public List<Course> GetAllCourses();
     public void SetLoadedCourses(List<Course> courses);
@@ -113,12 +113,37 @@ class ServiceInstance implements StudentService {
         course.AddStudentToCourse(student);
         student.AddToCourse(course);
         System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
+        try {
+            Application.fileService.SaveCourseInfo(courses);
+            Application.fileService.SaveStudentInfo(students);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void RemoveStudentFromCourse(Student student, Course course){
+    public void RemoveStudentFromCourse(String studentID, String courseID){
+        Course course = FindCourseByID(courseID);
+        Student student = FindStudentByID(studentID);
+
+        if(course == null || student == null) {
+            System.out.println(course + " is null or " + student + " is null");
+            return;
+        }
+
+        if(!course.students.contains(student)){
+            System.out.println("Student not on course");
+            return;
+        }
         course.RemoveStudentFromCourse(student);
         student.RemoveFromCourse(course);
         System.out.println("Removed student " + student.GetFirstName() + " " + student.GetLastName() + " from course " + course.GetID() + " " + course.GetName());
+        
+        try {
+            Application.fileService.SaveCourseInfo(courses);
+            Application.fileService.SaveStudentInfo(students);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Student> GetAllStudents(){

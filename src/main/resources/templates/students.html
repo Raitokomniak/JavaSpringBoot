@@ -38,7 +38,7 @@
                             <option value="Add to course" selected disabled />
                                     
                             <th:block th:each="c : ${courses}">
-                                <option th:value="${c.GetID}" th:text="${cStat.index} + ${c.GetName()}"/>
+                                <option th:value="${c.GetID}" th:text="${c.GetName()}"/>
                             </th:block>
                                     
                             <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
@@ -48,11 +48,15 @@
                     </form>
                     </td>
                     
-                    <!-- Workaround iteroidun select formin hiddenvalueiden muuttamiseen, meni muuten tosi kauan huHHUH-->
+                    <!-- Change the hidden value based to the selection-->
                     <script type="text/javascript" th:inline="javascript">
                         function changeHiddenValue(){
                             document.getElementById('hiddenValue').value = document.getElementById('courseselection').value;
-                            document.getElementById('addToCourseForm').submit();
+                            let text = "Are you sure?";
+                            if(confirm(text)){
+                                document.getElementById('addToCourseForm').submit();
+                            }
+                            else return;
                         }
                     </script>
 
@@ -69,8 +73,6 @@
                                         return true;
                                     }
                                     else return false;
-
-                                    document.getElementById("demo").innerHTML = text;
                                     }
                                 </script>
                         </form>

@@ -81,4 +81,24 @@ public class FileService implements Serializable {
         stream.close();
         return object;
     }
+
+    public void LoadPremadeContent() throws IOException{
+        if(!new File("CourseInfo_demo.dat").exists()) return; 
+        ArrayList<Course> courses = new ArrayList<Course>();
+        Iterable<?> array = (Iterable<?>) ReadStream("CourseInfo_demo.dat");
+        for(Object o : array) courses.add((Course)o);
+
+        if(!new File("StudentInfo_demo.dat").exists()) return;
+        ArrayList<Student> students = new ArrayList<Student>();
+        array = (Iterable<?>) ReadStream("StudentInfo_demo.dat");
+        for(Object o : array) students.add((Student)o);
+
+        Application.studentService.SetLoadedCourses(courses);
+        Application.studentService.SetLoadedStudents(students);
+    }
+
+    public void FlushAllContent(){
+        new File(this.courseData.path).delete();
+        new File(this.studentData.path).delete();
+    }
 }
