@@ -102,5 +102,7 @@ public class FileService implements Serializable {
     public void FlushAllContent(){
         new File(this.courseData.path).delete();
         new File(this.studentData.path).delete();
+        Application.studentService.SetLoadedCourses(new ArrayList<Course>());
+        Application.studentService.SetLoadedStudents(new ArrayList<Student>());
     }
 }
