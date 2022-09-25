@@ -34,9 +34,6 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Course Name</th>
-                        <th scope="col">Teacher</th>
-                        <th scope="col">Start Date</th>
-                        <th scope="col">End Date</th>
                         <th scope="col">Credit</th>
                         <th scope="col">Additional information</th>
                         <th scope="col">Remove student from course</th>
@@ -45,10 +42,8 @@
                 </thead>
                 <tr th:each="courses : ${courses}">
                     <td th:text="${courses.GetID()}"></td>
-                    <td th:text="${courses.GetName()}"></td>
-                    <td th:text="${courses.GetTeacher()}"></td>
-                    <td th:text="${courses.GetStartDate()}"></td>
-                    <td th:text="${courses.GetEndDate()}"></td>
+                    <td><a th:href="'http://localhost:8080/getCourse?courseID=' + ${courses.GetID()}" th:text="${courses.GetName()}"></td>
+
                     <td th:text="${courses.GetCredit()}"></td>
                     <td th:text="${courses.GetInfo()}"></td>
 

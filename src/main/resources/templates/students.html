@@ -37,30 +37,27 @@
                     <td th:text="${student.GetFirstName()}"></td>
                     <td th:text="${student.GetLastName()}"></td>
                     <td>
+                        
                         <!-- Iterate over found courses -->
-                        <form id='addToCourseForm' method="post" action="http://localhost:8080/addStudentToCourse">
-                            <select id='courseselection' onchange="changeHiddenValue()">
+                        <form id='addToCourseForm' method="post">
+                            <select th:element-id="${student.GetID()}" th:id="${student.GetID()} + 'courseselection'" th:onchange="changeHiddenValue(this.getAttribute('element-id'))">
                                 <option value="Add to course" selected disabled />
-                                        
                                 <th:block th:each="c : ${courses}">
                                     <option th:value="${c.GetID}" th:text="${c.GetName()}"/>
                                 </th:block>
-                                        
-                                <input type="hidden" name="studentID" th:value="${student.GetID()}"/>
-                                <input type="hidden" id='hiddenValue' name="courseID" th:value="${'NULL'}"/>
-                                        
                             </select>
                         </form>
-                    </td>
-                    
-                    <!-- Change the hidden value based to the selection-->
-                    <script type="text/javascript" th:inline="javascript">
-                        function changeHiddenValue(){
-                            document.getElementById('hiddenValue').value = document.getElementById('courseselection').value;
-                            document.getElementById('addToCourseForm').submit();
-                        }
-                    </script>
-
+                        </td>
+                        
+                        <!-- Change the form action based on the selected course of the student elementid -->
+                        <script type="text/javascript" th:inline="javascript">
+                            function changeHiddenValue(elementid){
+                                console.log(document.getElementById(elementid + 'courseselection').value);
+                                var courseID = document.getElementById(elementid + 'courseselection').value;
+                                document.getElementById('addToCourseForm').action = "http://localhost:8080/addStudentToCourse?studentID=" + elementid + "&courseID=" + courseID;
+                                document.getElementById('addToCourseForm').submit();
+                            }
+                        </script>
 
                     <!-- Delete student with confirmation -->
                     <td>

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ViewController {
@@ -50,6 +51,23 @@ public class ViewController {
         model.addAttribute("courses", Application.studentService.GetAllCourses());
         model.addAttribute("students", Application.studentService.GetAllStudents());
         return "courses";
+    }
+
+    @RequestMapping("/course")
+    public String CourseInfo(@RequestParam String courseID, Model model){
+        Course course = Application.studentService.FindCourseByID(courseID);
+        model.addAttribute("course", course);
+
+        if(course instanceof OnlineCourse){
+            OnlineCourse oc = (OnlineCourse) course;
+            model.addAttribute("location", oc.GetLink());
+        }
+        if(course instanceof ClassRoomCourse){
+            ClassRoomCourse cc = (ClassRoomCourse) course;
+            model.addAttribute("location", cc.GetClassRoom());
+        }
+        
+        return "course";
     }
 
 

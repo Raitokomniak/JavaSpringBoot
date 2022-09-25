@@ -12,19 +12,19 @@ sisältää esim. koosteita, joissa datamallit ovat. Lisähaaste: Tee kontroller
 tarvittavat toiminnot ja toteuta sitten kyseinen rajapinta.
 REST-rajapinta tulee käyttämään tätä luokkaa tiedon hakuun jne. */
 public interface StudentService {
-    public void CreateStudent(String firstName, String lastName);
+    public void CreateStudent(String firstName, String lastName)  throws IOException;
     String CreateStudentID(String firstName, String lastName);
-    public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info);
-    public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info);
-    public void AddStudentToCourse(String studentID, String courseID);
-    public void RemoveStudentFromCourse(String studentID, String courseID);
+    public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info)  throws IOException;
+    public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info)  throws IOException;
+    public void AddStudentToCourse(String studentID, String courseID)  throws IOException;
+    public void RemoveStudentFromCourse(String studentID, String courseID)  throws IOException;
     public List<Student> GetAllStudents();
     public List<Course> GetAllCourses();
     public void SetLoadedCourses(List<Course> courses);
     public void SetLoadedStudents(List<Student> students);
     public Course FindCourseByID(String id);
-    public void DeleteStudent(String id);
-    public void DeleteCourse(String id);
+    public void DeleteStudent(String id) throws IOException;
+    public void DeleteCourse(String id) throws IOException;
 }
 
 class ServiceInstance implements StudentService {
@@ -37,29 +37,24 @@ class ServiceInstance implements StudentService {
     }
 
     //Creates a new student with firstName and lastName
-    public void CreateStudent(String firstName, String lastName){
+    public void CreateStudent(String firstName, String lastName) throws IOException{
         students.add(new Student(firstName, lastName, CreateStudentID(firstName, lastName)));
         System.out.println("Created student " + students.get(students.size() -1 ).GetFirstName() + " " + students.get(students.size() -1 ).GetLastName() + " with id " + students.get(students.size() -1 ).GetID());
-        
-        try {
-            Application.fileService.SaveStudentInfo(students);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Application.fileService.SaveStudentInfo(students);
     }
 
     // Creates a unique student ID from first name, last name, the 
     // last two digits of the current year and checks for duplicates to
     // create a unique key
     public String CreateStudentID(String firstName, String lastName){
-        char[] id = new char[8];
-        id[0] = Character.toLowerCase(firstName.charAt(0));
-        id[1] = Character.toLowerCase(firstName.charAt(1));
-        id[2] = Character.toLowerCase(lastName.charAt(0));
-        id[3] = Character.toLowerCase(lastName.charAt(1));
         String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
-        id[4] = year.charAt(2);
-        id[5] = year.charAt(3);
+        char[] id = new char[8];
+        id[0] = year.charAt(2);
+        id[1] = year.charAt(3);
+        id[2] = Character.toLowerCase(firstName.charAt(0));
+        id[3] = Character.toLowerCase(firstName.charAt(1));
+        id[4] = Character.toLowerCase(lastName.charAt(0));
+        id[5] = Character.toLowerCase(lastName.charAt(1));
         id[6] = '0';
         id[7] = '0';
         int unique = 0;
@@ -76,28 +71,21 @@ class ServiceInstance implements StudentService {
 
 
     //Creates a new online course with a remote link to a meeting/live stream
-    public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info){
+    public void CreateOnlineCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String remoteLink, String info) throws IOException{
         courses.add(new OnlineCourse(id, name, teacher, startDate, endDate, credit, remoteLink, info));
         System.out.println("Created course " + courses.get(courses.size() - 1).GetID() + " " + courses.get(courses.size() - 1).GetName());
-        try {
-            Application.fileService.SaveCourseInfo(courses);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Application.fileService.SaveCourseInfo(courses);
     }
 
     //Creates a new classroom course with a classroom number
-    public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info){
+    public void CreateClassRoomCourse(String id, String name, String teacher, String startDate, String endDate, int credit, String classRoom, String info) throws IOException{
         courses.add(new ClassRoomCourse(id, name, teacher, startDate, endDate, credit, classRoom, info));
         System.out.println("Created course " + courses.get(courses.size() - 1).GetID() + " " + courses.get(courses.size() - 1).GetName());
-        try {
-            Application.fileService.SaveCourseInfo(courses);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Application.fileService.SaveCourseInfo(courses);
     }
 
-    public void AddStudentToCourse(String studentID, String courseID){
+    public void AddStudentToCourse(String studentID, String courseID)  throws IOException{
+        System.out.println("AddStudentToCourse() " + studentID + " " + courseID);
         Course course = FindCourseByID(courseID);
         Student student = FindStudentByID(studentID);
 
@@ -106,79 +94,50 @@ class ServiceInstance implements StudentService {
             return;
         }
 
-        if(course.students.contains(student)){
+        if(course.students.contains(student) || student.courses.contains((course))){
             System.out.println("Student already on course");
             return;
         }
         course.AddStudentToCourse(student);
         student.AddToCourse(course);
         System.out.println("Added student " + student.GetFirstName() + " " + student.GetLastName() + " to course " + course.GetID() + " " + course.GetName());
-        try {
-            Application.fileService.SaveCourseInfo(courses);
-            Application.fileService.SaveStudentInfo(students);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Application.fileService.SaveCourseInfo(courses);
+        Application.fileService.SaveStudentInfo(students);
     }
 
-    public void RemoveStudentFromCourse(String studentID, String courseID){
+    public void RemoveStudentFromCourse(String studentID, String courseID) throws IOException{
         Course course = FindCourseByID(courseID);
         Student student = FindStudentByID(studentID);
-
-        if(course == null || student == null) {
-            System.out.println(course + " is null or " + student + " is null");
-            return;
-        }
-
-        if(!course.students.contains(student)){
-            System.out.println("Student not on course");
-            return;
-        }
         course.RemoveStudentFromCourse(student);
         student.RemoveFromCourse(course);
         System.out.println("Removed student " + student.GetFirstName() + " " + student.GetLastName() + " from course " + course.GetID() + " " + course.GetName());
-        
-        try {
-            Application.fileService.SaveCourseInfo(courses);
-            Application.fileService.SaveStudentInfo(students);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Application.fileService.SaveCourseInfo(courses);
+        Application.fileService.SaveStudentInfo(students);
     }
 
-    public List<Student> GetAllStudents(){
-        return students;
-    }
-    public List<Course> GetAllCourses(){
-        return courses;
-    }
+    public List<Student> GetAllStudents(){ return students;}
+    public List<Course> GetAllCourses(){ return courses; }
 
     public Student FindStudentByID(String id){
-        for(Student s : students){
-            if(id.trim().equals(s.GetID())) return s;
-        }
+        for(Student s : students){ if(id.trim().equals(s.GetID())) return s; }
         return null;
     }
 
     public Course FindCourseByID(String id){
-        for(Course c : courses){
-            if(id.trim().equals(c.GetID())) return c;
-        }
+        for(Course c : courses){ if(id.trim().equals(c.GetID())) return c; }
         return null;
     }
 
     public void SetLoadedCourses(List<Course> courses){
-        if(courses == null) return;
-        this.courses = courses;
+        if(courses != null)  this.courses = courses;
     }
 
     public void SetLoadedStudents(List<Student> students){
-        if(students == null) return;
-        this.students = students;
+        if(students != null) this.students = students;
     }
 
     //Removes student from students list and from any courses where the student is enlisted
-    public void DeleteStudent(String id){
+    public void DeleteStudent(String id) throws IOException{
         Student student = FindStudentByID(id);
         if(students.contains(student)) {
             students.remove(student);
@@ -188,29 +147,18 @@ class ServiceInstance implements StudentService {
         }
         else System.out.println("Student doesnt exist with this id");
 
-        try {
-            Application.fileService.SaveStudentInfo(students);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       Application.fileService.SaveStudentInfo(students);
+    
     }
 
     //Deletes course from courses list and from any students who have course in their courselist
-    public void DeleteCourse(String id){
+    public void DeleteCourse(String id) throws IOException{
         Course course = FindCourseByID(id);
         if(courses.contains(course)) {
             courses.remove(course);
-            for(Student s : students){
-                if(s.courses.contains(course)) s.courses.remove(course);
-            }
+            for(Student s : students) if(s.courses.contains(course)) s.courses.remove(course);
         }
         else System.out.println("Course doesnt exist with this id");
-
-        try {
-            Application.fileService.SaveCourseInfo(courses);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+        Application.fileService.SaveCourseInfo(courses);
     }
 }

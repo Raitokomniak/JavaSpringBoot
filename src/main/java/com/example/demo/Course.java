@@ -13,6 +13,7 @@ public abstract class Course implements Serializable{
     String endDate;
     int credit;
     String info;
+    String courseType;
     List<Student> students;
 
     public Course(){}
@@ -27,18 +28,18 @@ public abstract class Course implements Serializable{
         this.info = info;
         students = new ArrayList<Student>();
     }
-    
-    public void EditInformation(String info){
-        this.info = info;
-    }
 
     public void AddStudentToCourse(Student student){
         students.add(student);
     }
 
     public void RemoveStudentFromCourse(Student student){
-        if(students.contains(student)) students.remove(student);
-        else System.out.println("Student not found on course, this shouldnt happen");
+        for(Student s : students){
+            if(s.equals(student)){
+                students.remove(s);
+                return;
+            }
+        }
     }
 
     //Getters
@@ -49,5 +50,6 @@ public abstract class Course implements Serializable{
     public String GetEndDate(){return endDate;}
     public int GetCredit(){return credit;}
     public String GetInfo(){return info;}
+    public String GetType(){return courseType;}
     public List<Student> GetStudents(){return students;}
 }
