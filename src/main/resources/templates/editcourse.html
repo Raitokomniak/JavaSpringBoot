@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <meta charset="UTF-8"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
+        <script> $(function(){ $("#header").load("header.html");  }); </script> 
+    </head>
+    
+    <body>
+        <div id="header"></div>
+        <div class="container">
+            <table class="table" border="0">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Teacher</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Additional information</th>
+                        <th scope="col">Save</th>
+                    </tr>
+                </thead>
+                <tr>
+                <form method="post" action="/saveEditedCourse">
+                    <td><input type="hidden" name="courseID" th:value="${course.GetID()}"/> <input name="id" th:value="${course.GetID()}"/></td>
+                    <td><input name="name" th:value="${course.GetName()}"/></td>
+                    <td><input name="teacher" th:value="${course.GetTeacher()}"/></td>
+                    <td><input type="date" name="startDate" th:value="${course.GetStartDate()}"/></td>
+                    <td><input type="date" name="endDate" th:value="${course.GetEndDate()}"/></td>
+                    <td><input name="credit" th:value="${course.GetCredit()}"/></td>
+                    <td><input name="location" th:value="${location}"/></td>
+                    <td><input name="info" th:value="${course.GetInfo()}"/></td>
+                    <td><input type="submit" th:value="Save"></td>
+                </tr>
+            </form>
+            </table>
+    </body>
+</html>

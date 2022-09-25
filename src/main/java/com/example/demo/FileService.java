@@ -4,20 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//A class to track the info and execute some functions of a file
+//A small class to track the info and execute some functions of a file
 class FileInfo {
     File file;
     String path;
 
     FileInfo(String path){
         this.path = path;
-    }
-
-    public void NewFile() throws IOException{
-        file = new File(path);
-        file.createNewFile();
-        file.canRead();
-        file.canWrite();
     }
 }
 
@@ -26,11 +19,11 @@ public class FileService implements Serializable {
     FileInfo courseData;
 
     public FileService(){
+        //Paths go to project root
         studentData = new FileInfo("StudentInfo.dat");
         courseData  = new FileInfo("CourseInfo.dat");
     }
 
-    
     // Saves the Student list as an object to the path designated in the studentData FileInfo
     public void SaveStudentInfo(List<Student> students) throws IOException{
         FileOutputStream stream = new FileOutputStream(studentData.path);
@@ -51,6 +44,7 @@ public class FileService implements Serializable {
 
     //Loads student info from file
     public List<Student> LoadStudentInfo() throws IOException{
+        if(!new File(this.studentData.path).exists()) return null;
         ArrayList<Student> students = new ArrayList<Student>();
         Iterable<?> array = (Iterable<?>) ReadStream(this.studentData.path);
         for(Object o : array) students.add((Student)o);
@@ -59,6 +53,7 @@ public class FileService implements Serializable {
     
     //Loads course info from file
     public List<Course> LoadCourseInfo() throws IOException{
+        if(!new File(this.courseData.path).exists()) return null;
         ArrayList<Course> courses = new ArrayList<Course>();
         Iterable<?> array = (Iterable<?>) ReadStream(this.courseData.path);
         for(Object o : array) courses.add((Course)o);
@@ -77,5 +72,31 @@ public class FileService implements Serializable {
         }
         stream.close();
         return object;
+    }
+
+    //Loads some premade content made for this demo
+    public void LoadPremadeContent() throws IOException{
+        if(!new File("CourseInfo_demo.dat").exists()) return; 
+        ArrayList<Course> courses = new ArrayList<Course>();
+        Iterable<?> array = (Iterable<?>) ReadStream("CourseInfo_demo.dat");
+        for(Object o : array) courses.add((Course)o);
+
+        if(!new File("StudentInfo_demo.dat").exists()) return;
+        ArrayList<Student> students = new ArrayList<Student>();
+        array = (Iterable<?>) ReadStream("StudentInfo_demo.dat");
+        for(Object o : array) students.add((Student)o);
+
+        Application.studentService.SetLoadedCourses(courses);
+        Application.studentService.SetLoadedStudents(students);
+        SaveCourseInfo(courses);
+        SaveStudentInfo(students);
+    }
+
+    //Deletes all data
+    public void FlushAllContent(){
+        new File(this.courseData.path).delete();
+        new File(this.studentData.path).delete();
+        Application.studentService.SetLoadedCourses(new ArrayList<Course>());
+        Application.studentService.SetLoadedStudents(new ArrayList<Student>());
     }
 }

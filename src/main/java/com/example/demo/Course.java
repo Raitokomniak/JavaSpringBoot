@@ -27,21 +27,18 @@ public abstract class Course implements Serializable{
         this.info = info;
         students = new ArrayList<Student>();
     }
-    
-    public void EditInformation(String info){
-        this.info = info;
-    }
 
-    public void AddStudentToCourse(Student student){
-        students.add(student);
-    }
+    public void AddStudentToCourse(Student student){ students.add(student); }
 
     public void RemoveStudentFromCourse(Student student){
-        if(students.contains(student)) students.remove(student);
-        else System.out.println("Student not found on course, this shouldnt happen");
+        for(Student s : students){
+            if(s.equals(student)){
+                students.remove(s);
+                return;
+            }
+        }
     }
 
-    //Getters
     public String GetID(){return id;}
     public String GetName(){return name;}
     public String GetTeacher(){return teacher;}
