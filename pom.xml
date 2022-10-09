@@ -11,6 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>StudentCourse</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 	<name>StudentCourse</name>
 	<description>Student and course management app using Spring Boot</description>
 	<properties>
@@ -18,16 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring5</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
+       
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -42,6 +34,7 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
             <version>2.3.3.RELEASE</version>
         </dependency>
+
 	</dependencies>
 
 	<build>
