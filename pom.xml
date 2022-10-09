@@ -15,7 +15,7 @@
 	<name>StudentCourse</name>
 	<description>Student and course management app using Spring Boot</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
